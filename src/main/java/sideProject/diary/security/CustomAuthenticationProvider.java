@@ -8,12 +8,13 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import sideProject.diary.member.MemberEntity;
+import sideProject.diary.member.MemberService;
 
 @Component
 @RequiredArgsConstructor
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
-    private final UserDetailsServiceImpl userDetailsService;
+    private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -22,7 +23,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String loginid = authentication.getName();
         String password = (String) authentication.getCredentials();
 
-        MemberEntity entity = (MemberEntity) userDetailsService.loadUserByUsername(loginid);
+        MemberEntity entity = (MemberEntity) memberService.loadUserByUsername(loginid);
 
         if (!passwordEncoder.matches(password, entity.getPassword())) {
             throw new BadCredentialsException("Invalid Password");
