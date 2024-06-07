@@ -5,7 +5,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.util.Assert;
 
-import javax.security.auth.Subject;
 import java.util.Collection;
 
 public class CustomAuthenticationToken extends AbstractAuthenticationToken {

@@ -29,7 +29,6 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
         super(new AntPathRequestMatcher(DEFAULT_LOGIN_REQUEST_URL, HTTP_METHOD));
     }
 
-
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         if (request.getContentType() == null || !request.getContentType().equals(CONTENT_TYPE)) {
@@ -46,7 +45,4 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
         return getAuthenticationManager().authenticate(token);
     }
 
-    protected void setDetails(HttpServletRequest request, UsernamePasswordAuthenticationToken authRequest) {
-        authRequest.setDetails(this.authenticationDetailsSource.buildDetails(request));
-    }
 }
