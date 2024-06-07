@@ -23,14 +23,10 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
     private static final String CONTENT_TYPE = "application/json";
     private static final String USERNAME_KEY = "email";
     private static final String PASSWORD_KEY = "password";
-    private final ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
-    private static final AntPathRequestMatcher DEFAULT_LOGIN_PATH_REQUEST_MATCHER =
-            new AntPathRequestMatcher(DEFAULT_LOGIN_REQUEST_URL, HTTP_METHOD);
-
-    public JsonUsernamePasswordAuthenticationFilter(ObjectMapper objectMapper){
-        super(DEFAULT_LOGIN_PATH_REQUEST_MATCHER);
-        this.objectMapper = objectMapper;
+    public JsonUsernamePasswordAuthenticationFilter(){
+        super(new AntPathRequestMatcher(DEFAULT_LOGIN_REQUEST_URL, HTTP_METHOD));
     }
 
 
@@ -46,9 +42,8 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
         String username = usernamePasswordMap.get(USERNAME_KEY);
         String password = usernamePasswordMap.get(PASSWORD_KEY);
 
-        UsernamePasswordAuthenticationToken authRequest = UsernamePasswordAuthenticationToken.unauthenticated(username, password);
-        setDetails(request, authRequest);
-        return this.getAuthenticationManager().authenticate(authRequest);
+        CustomAuthenticationToken token = new CustomAuthenticationToken(username, password);
+        return getAuthenticationManager().authenticate(token);
     }
 
     protected void setDetails(HttpServletRequest request, UsernamePasswordAuthenticationToken authRequest) {
