@@ -22,8 +22,9 @@ public class MemberService implements UserDetailsService {
     }
 
     @Transactional
-    public void saveMember(MemberDto dto){
+    public MemberDto saveMember(MemberDto dto){
         MemberEntity saved = memberRepository.save(MemberDto.dtoToEntity(dto));
+        return MemberDto.EntityToDto(saved);
     }
 
 }

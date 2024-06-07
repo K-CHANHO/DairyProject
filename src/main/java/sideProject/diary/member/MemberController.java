@@ -18,9 +18,10 @@ public class MemberController {
 
     @PostMapping("/save")
     public ResponseEntity saveMember(MemberDto memberDto) {
-        memberService.saveMember(memberDto);
 
-        return new ResponseEntity("회원가입 성공", HttpStatus.OK);
+        MemberDto savedMember = memberService.saveMember(memberDto);
+
+        return new ResponseEntity(savedMember, HttpStatus.OK);
     }
 
 }
