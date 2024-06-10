@@ -27,4 +27,8 @@ public class MemberService implements UserDetailsService {
         return MemberDto.EntityToDto(saved);
     }
 
+    public MemberDto findMemberByEmail(String email){
+        return MemberDto.EntityToDto(memberRepository.findById(email).orElseThrow());
+    }
+
 }
