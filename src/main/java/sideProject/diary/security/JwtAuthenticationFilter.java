@@ -23,8 +23,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         // Access Token 추출
-//        String accessToken = resolveToken((HttpServletRequest) request);
-        String accessToken = null;
+        String accessToken = resolveToken((HttpServletRequest) request);
 
         // Access Token 유효성 검사
         if (accessToken != null && jwtService.validateToken(accessToken)) {
