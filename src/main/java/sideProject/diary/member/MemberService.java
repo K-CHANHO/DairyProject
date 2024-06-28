@@ -11,8 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sideProject.diary.jwt.JwtDTO;
-import sideProject.diary.jwt.JwtEntity;
+import sideProject.diary.jwt.JwtDto;
 import sideProject.diary.jwt.JwtRepository;
 import sideProject.diary.jwt.JwtService;
 
@@ -46,7 +45,7 @@ public class MemberService implements UserDetailsService {
                 .build();
     }
 
-    public JwtDTO login(String email, String password){
+    public JwtDto login(String email, String password){
         // 1. email + password 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
 
@@ -54,11 +53,11 @@ public class MemberService implements UserDetailsService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 검증된 authentication 객체로 JWT 생성.
-        JwtDTO jwtDTO = jwtService.generateToken(authentication);
+        JwtDto jwtDTO = jwtService.generateToken(authentication);
 
         // 4. RefreshToken DB 저장.
         jwtDTO.setEmail(email);
-        jwtRepository.save(JwtDTO.dtoToEntity(jwtDTO));
+        jwtRepository.save(JwtDto.dtoToEntity(jwtDTO));
 
         return jwtDTO;
     }

@@ -7,14 +7,14 @@ import lombok.Data;
 @Builder
 @Data
 @AllArgsConstructor
-public class JwtDTO {
+public class JwtDto {
     private String grantType;
     private String accessToken;
     private String refreshToken;
 
     private String email;
 
-    public static JwtEntity dtoToEntity(JwtDTO jwtDTO){
+    public static JwtEntity dtoToEntity(JwtDto jwtDTO){
         JwtEntity entity = JwtEntity.builder()
                 .email(jwtDTO.getEmail())
                 .refreshToken(jwtDTO.getRefreshToken())
@@ -23,8 +23,8 @@ public class JwtDTO {
         return entity;
     }
 
-    public static JwtDTO EntityToDto(JwtEntity entity){
-        JwtDTO dto = JwtDTO.builder()
+    public static JwtDto EntityToDto(JwtEntity entity){
+        JwtDto dto = JwtDto.builder()
                 .email(entity.getEmail())
                 .grantType("Bearer")
                 .refreshToken(entity.getRefreshToken())
