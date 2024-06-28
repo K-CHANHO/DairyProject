@@ -4,9 +4,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import sideProject.diary.jwt.JwtDTO;
 import sideProject.diary.jwt.JwtService;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -18,6 +22,7 @@ public class MemberController {
     @PostMapping("/save")
     public ResponseEntity saveMember(@RequestBody MemberDto memberDto) {
 
+        memberDto.setRoles(List.of("USER"));
         memberService.saveMember(memberDto);
 
         return new ResponseEntity("회원가입을 완료하였습니다. 로그인을 진행해주세요.", HttpStatus.OK);
@@ -33,7 +38,10 @@ public class MemberController {
 
     @PostMapping("/test")
     public ResponseEntity test(){
-        return new ResponseEntity("TEST", HttpStatus.OK);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return new ResponseEntity("Login Member : " + authentication.getName(), HttpStatus.OK);
     }
 
 }

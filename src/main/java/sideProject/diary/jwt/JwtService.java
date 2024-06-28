@@ -43,7 +43,7 @@ public class JwtService {
 
         // AccessToken 생성
         int accessTokenValidDay = 3;
-        Date accessTokenExpire = new Date(now + (24 * 60 * 60 * accessTokenValidDay));
+        Date accessTokenExpire = new Date(now + (1000 * 60 * 60 * 24 * accessTokenValidDay));
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
@@ -54,7 +54,7 @@ public class JwtService {
         // Refresh Token 생성
         int refreshTokenValidDay = 30;
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + 24 * 60 * 60 * refreshTokenValidDay))
+                .setExpiration(new Date(now + 1000 * 60 * 60 * 24 * refreshTokenValidDay))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
