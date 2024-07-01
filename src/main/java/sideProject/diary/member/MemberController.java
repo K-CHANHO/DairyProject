@@ -27,7 +27,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody MemberDto memberDto){
+    public ResponseEntity loginMember(@RequestBody MemberDto memberDto){
 
         JwtDto jwt = memberService.login(memberDto.getEmail(), memberDto.getPassword());
 

@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -24,15 +25,14 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtService jwtService;
-
 
     @Bean
     public WebSecurityCustomizer configure(){
         return (web -> web.ignoring()
                 .requestMatchers(toH2Console())
                 .requestMatchers("/h2-console/**")
+                .requestMatchers("/error")
         );
     }
 
@@ -44,10 +44,9 @@ public class SecurityConfig {
                 .formLogin(formLogin -> formLogin.disable())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorize) -> authorize
-//                        .requestMatchers("/diary/member/save", "/", "/diary/member/login", "/error").permitAll()
-//                        .requestMatchers("/diary/member/test").hasRole("USER")
-                        .requestMatchers("/").permitAll()
-                        .anyRequest().permitAll())
+                        .requestMatchers("/diary/member/save", "/", "/diary/member/login").permitAll()
+                        .requestMatchers("/diary/member/test").hasRole("USER")
+                        .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -60,5 +59,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
 
 }

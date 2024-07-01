@@ -1,6 +1,5 @@
 package sideProject.diary.member;
 
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,7 +17,7 @@ import sideProject.diary.jwt.JwtService;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class MemberService implements UserDetailsService {
+public class MemberService {
 
     private final MemberRepository memberRepository;
     private final JwtRepository jwtRepository;
@@ -26,24 +25,6 @@ public class MemberService implements UserDetailsService {
     private final JwtService jwtService;
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final EntityManager entityManager;
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails user = memberRepository.findById(username)
-                .map(this::createUserDetails)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
-
-        return user;
-    }
-
-    private UserDetails createUserDetails(MemberEntity entity) {
-        return User.builder()
-                .username(entity.getEmail())
-                .password(entity.getPassword())
-                .roles(entity.getRoles().toArray(new String[0]))
-                .build();
-    }
 
     public JwtDto login(String email, String password){
         // 1. email + password 기반으로 AuthenticationToken 생성
@@ -62,7 +43,6 @@ public class MemberService implements UserDetailsService {
         return jwtDTO;
     }
 
-    @Transactional
     public MemberDto saveMember(MemberDto dto){
         MemberEntity saved = memberRepository.save(MemberDto.dtoToEntity(dto));
         return MemberDto.EntityToDto(saved);
