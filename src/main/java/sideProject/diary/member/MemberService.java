@@ -14,6 +14,8 @@ import sideProject.diary.jwt.JwtDto;
 import sideProject.diary.jwt.JwtRepository;
 import sideProject.diary.jwt.JwtService;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -44,6 +46,7 @@ public class MemberService {
     }
 
     public MemberDto saveMember(MemberDto dto){
+        dto.setRoles(List.of("USER"));
         MemberEntity saved = memberRepository.save(MemberDto.dtoToEntity(dto));
         return MemberDto.EntityToDto(saved);
     }

@@ -20,7 +20,6 @@ public class MemberController {
     @PostMapping("/save")
     public ResponseEntity saveMember(@RequestBody MemberDto memberDto) {
 
-        memberDto.setRoles(List.of("USER"));
         memberService.saveMember(memberDto);
 
         return new ResponseEntity("회원가입을 완료하였습니다. 로그인을 진행해주세요.", HttpStatus.OK);
