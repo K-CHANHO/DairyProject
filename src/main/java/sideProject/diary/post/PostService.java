@@ -14,4 +14,9 @@ public class PostService {
 
         return PostDto.toDto(postEntity);
     }
+
+    public PostDto getPost(Long postId) {
+        PostEntity entity = postRepository.findById(postId).orElseGet(null);
+        return PostDto.toDto(entity);
+    }
 }
