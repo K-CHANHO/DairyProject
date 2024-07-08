@@ -8,11 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.Map;
 
 @RestController
@@ -24,7 +27,9 @@ public class PostController {
 
     @PostMapping("save")
     @Secured("ROLE_USER")
-    public ResponseEntity savePost(@RequestBody PostDto postDto){
+    public ResponseEntity savePost(@RequestBody PostDto postDto, Principal principal){
+
+        postDto.setEmail(principal.getName());
         postService.savePost(postDto);
 
         return new ResponseEntity("일기 저장 완료", HttpStatus.OK);
@@ -37,6 +42,7 @@ public class PostController {
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("postId", post.getPostId());
+        jsonObject.addProperty("email", post.getEmail());
         jsonObject.addProperty("title", post.getTitle());
         jsonObject.addProperty("content", post.getContent());
 
@@ -47,9 +53,20 @@ public class PostController {
     }
 
     @PostMapping("edit")
-    @PermitAll
-    public ResponseEntity editPost(@RequestBody PostDto postDto) {
-        return new ResponseEntity(HttpStatus.OK);
+    @PreAuthorize("authentication.name == #postDto?.email or hasRole('ROLE_ADMIN')")
+    public ResponseEntity editPost(@P ("postDto") @RequestBody PostDto postDto) {
+
+        postService.editPost(postDto);
+
+        return new ResponseEntity("일기가 수정되었습니다.", HttpStatus.OK);
     }
 
+    @PostMapping("delete")
+    @PreAuthorize("authentication.name == #postDto?.email or hasRole('ROLE_ADMIN')")
+    public ResponseEntity deletePost(@P("postDto") @RequestBody PostDto postDto){
+        Long postId = postDto.getPostId();
+        postService.deletePost(postId);
+
+        return new ResponseEntity("일기가 삭제되었습니다.", HttpStatus.OK);
+    }
 }
