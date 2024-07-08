@@ -32,4 +32,8 @@ public class PostService {
 
         return PostDto.toDto(saved);
     }
+
+    public void deletePost(Long postId) {
+        postRepository.deleteById(postId);
+    }
 }

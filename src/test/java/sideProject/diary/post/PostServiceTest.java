@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 class PostServiceTest {
@@ -60,5 +61,14 @@ class PostServiceTest {
         assertThat(editDto.getEmail()).isEqualTo("test@test.com");
         assertThat(editDto.getTitle()).isEqualTo(editDto.getTitle());
         assertThat(editDto.getContent()).isEqualTo(editDto.getContent());
+    }
+
+    @Test
+    @DisplayName("게시물 삭제 테스트")
+    @Order(4)
+    void deletePost(){
+        postService.deletePost(1L);
+
+        assertThatThrownBy(() -> postService.getPost(1L)).isInstanceOf(IllegalArgumentException.class);
     }
 }
