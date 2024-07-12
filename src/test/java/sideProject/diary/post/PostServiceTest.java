@@ -12,8 +12,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SpringBootTest
 class PostServiceTest {
 
-    @Autowired PostRepository postRepository;
     @Autowired PostService postService;
+
+    private PostDto tempDto = PostDto.builder()
+            .email("temp@test.com")
+            .title("임시저장 테스트")
+            .content("임시저장 테스트")
+            .status("TEMP")
+            .build();
 
     private PostDto rawDto = PostDto.builder()
             .email("test@test.com")
@@ -71,4 +77,14 @@ class PostServiceTest {
 
         assertThatThrownBy(() -> postService.getPost(1L)).isInstanceOf(IllegalArgumentException.class);
     }
+
+    @Test
+    @DisplayName("임시저장 테스트")
+    void tempSavePost(){
+        PostDto postDto = postService.savePost(tempDto);
+
+        assertThat(postDto.getStatus()).isEqualTo("TEMP");
+
+    }
+
 }

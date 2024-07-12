@@ -11,11 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostDto {
 
-    private Long postId;
-    private String title;
-    private String content;
+    private Long postId; // 일기 고유번호
+    private String title; // 일기제목
+    private String content; // 일기내용
+    private String status; // 상태
 
-    private String email;
+    private String email; // 작성자 아이디
 
     public static PostEntity toEntity(PostDto dto){
         PostEntity entity = PostEntity.builder()
@@ -23,6 +24,7 @@ public class PostDto {
                 .postId(dto.getPostId())
                 .title(dto.getTitle())
                 .content(dto.getContent())
+                .status(dto.getStatus())
                 .build();
 
         return entity;
@@ -34,6 +36,7 @@ public class PostDto {
                 .postId(entity.getPostId())
                 .title(entity.getTitle())
                 .content(entity.getContent())
+                .status(entity.getStatus())
                 .build();
 
         return dto;

@@ -1,6 +1,7 @@
 package sideProject.diary.post;
 
 import jakarta.persistence.*;
+import jdk.jshell.Snippet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,5 +27,8 @@ public class PostEntity {
 
     @Column
     private String email;
+
+    @Column
+    private String status;
 
 }
