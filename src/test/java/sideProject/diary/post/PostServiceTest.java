@@ -1,13 +1,17 @@
 package sideProject.diary.post;
 
+import com.google.gson.Gson;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
+
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 class PostServiceTest {
@@ -25,6 +29,7 @@ class PostServiceTest {
             .email("test@test.com")
             .title("테스트 제목")
             .content("테스트 내용")
+            .status("DONE")
             .build();
 
     private PostDto editDto = PostDto.builder()
@@ -87,4 +92,28 @@ class PostServiceTest {
 
     }
 
+
+    @Test
+    @DisplayName("사용자의 모든 일기 조회")
+    void getAllPosts() {
+
+        List<PostDto> dtoList = new ArrayList<>();
+        IntStream.rangeClosed(1,5).forEach(i->{
+                PostDto post = PostDto.builder()
+                        .email("test2@test.com")
+                        .title(i+"번 일기")
+                        .content(i+"번 내용")
+                        .status("DONE")
+                        .build();
+            PostDto postDto = postService.savePost(post);
+            dtoList.add(postDto);
+                }
+        );
+
+        String email = "test2@test.com";
+        List<PostDto> allPosts = postService.getAllPosts(email);
+
+        Gson gson = new Gson();
+        assertThat(gson.toJson(allPosts)).isEqualTo(gson.toJson(dtoList));
+    }
 }
