@@ -3,6 +3,9 @@ package sideProject.diary.post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -35,5 +38,12 @@ public class PostService {
 
     public void deletePost(Long postId) {
         postRepository.deleteById(postId);
+    }
+
+    public List<PostDto> getAllPosts(String email){
+        List<PostEntity> postsEntity = postRepository.findAllByEmail(email);
+        List<PostDto> postsDto = postsEntity.stream().map(PostDto::toDto).collect(Collectors.toList());
+
+        return postsDto;
     }
 }

@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -24,6 +24,7 @@ import java.util.Map;
 public class PostController {
 
     private final PostService postService;
+    private Gson gson = new Gson();
 
     @PostMapping("save")
     @Secured("ROLE_USER")
@@ -46,7 +47,6 @@ public class PostController {
         jsonObject.addProperty("title", post.getTitle());
         jsonObject.addProperty("content", post.getContent());
 
-        Gson gson = new Gson();
         String returnString = gson.toJson(jsonObject);
 
         return new ResponseEntity(returnString, HttpStatus.OK);
@@ -68,5 +68,15 @@ public class PostController {
         postService.deletePost(postId);
 
         return new ResponseEntity("일기가 삭제되었습니다.", HttpStatus.OK);
+    }
+
+    @PostMapping("getAll")
+    public ResponseEntity getAllPost(Principal principal){
+        List<PostDto> allPosts = postService.getAllPosts(principal.getName());
+
+        String postsJson = gson.toJson(allPosts);
+
+        return new ResponseEntity(postsJson, HttpStatus.OK);
+
     }
 }
